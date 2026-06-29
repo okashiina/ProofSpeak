@@ -305,6 +305,31 @@
   grid-template-columns: 1fr;
 }
 
+/* dynamic section blocks (about topics, videos) */
+.blk-card {
+  border: 1px solid rgba(224, 224, 224, 0.1);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  background: rgba(224, 224, 224, 0.02);
+}
+.blk-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+.blk-head > span {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(224, 224, 224, 0.5);
+}
+.blk-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
 /* image uploader */
 .img-ubox {
   border: 1px dashed rgba(224, 224, 224, 0.2);
