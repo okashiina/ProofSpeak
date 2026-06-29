@@ -896,38 +896,6 @@ h4 {
   font-style: italic;
   opacity: 0.62;
 }
-.marquee-w {
-  overflow: hidden;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 0;
-}
-.marquee-t {
-  display: flex;
-  gap: 4rem;
-  width: max-content;
-  animation: mq 22s linear infinite;
-}
-@keyframes mq {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.mq-item {
-  font-family: var(--fd);
-  font-size: 1.3rem;
-  color: rgba(224, 224, 224, 0.18);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 4rem;
-}
-.mq-item span {
-  color: var(--teal);
-}
 .home-prods {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1042,6 +1010,158 @@ h4 {
   font-size: 0.82rem;
   color: rgba(224, 224, 224, 0.36);
   line-height: 1.7;
+}
+
+/* ---- About: editor topic columns ---- */
+.topic-list {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.topic-row {
+  background: var(--black);
+  padding: 2.6rem 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+.topic-row.has-img {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+}
+.topic-row.has-img:nth-child(even) .topic-img {
+  order: 2;
+}
+.topic-img {
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.topic-img img {
+  width: 100%;
+  height: 100%;
+  max-height: 360px;
+  object-fit: cover;
+}
+.topic-text h3 {
+  font-family: var(--fd);
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+.topic-text p {
+  font-size: 0.92rem;
+  color: rgba(224, 224, 224, 0.55);
+  line-height: 1.8;
+  max-width: 60ch;
+}
+
+/* ---- About: bystander guide ---- */
+.bystander {
+  padding: 1rem 0 5rem;
+}
+.bys-card {
+  background: var(--lime);
+  color: var(--black);
+  border-radius: var(--r);
+  padding: clamp(2.2rem, 5vw, 4rem);
+}
+.bys-text {
+  max-width: 720px;
+}
+.bys-text h2 {
+  font-family: var(--fd);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.05;
+  margin-bottom: 1.1rem;
+  color: var(--black);
+}
+.bys-text p {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(23, 24, 23, 0.78);
+  max-width: 60ch;
+}
+.bys-text .btn-primary {
+  background: var(--black);
+  color: var(--gray);
+  border-color: var(--black);
+}
+
+/* ---- About: Instagram redirect ---- */
+.ig-strip {
+  background: var(--teal);
+  padding: 4rem 0;
+}
+.ig-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.ig-inner h2 {
+  color: var(--white);
+}
+.ig-inner .lbl {
+  color: rgba(255, 255, 255, 0.55);
+}
+.ig-strip .btn-outline {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+/* ---- Home: campaign video gallery ---- */
+.vid-gallery {
+  display: grid;
+  gap: 3.5rem;
+}
+.vid-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+.vid-item:nth-child(even) .vid-embed {
+  order: 2;
+}
+.vid-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.vid-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.vid-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(224, 224, 224, 0.4);
+  font-size: 0.85rem;
+}
+.vid-title {
+  font-family: var(--fd);
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  line-height: 1.15;
+  margin-bottom: 0.85rem;
+}
+.vid-desc {
+  font-size: 0.92rem;
+  color: rgba(224, 224, 224, 0.55);
+  line-height: 1.8;
+  max-width: 52ch;
 }
 
 /* ---- Stories ---- */
@@ -1440,6 +1560,20 @@ footer {
   .ft-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+  }
+  .vid-item,
+  .topic-row.has-img {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .vid-item:nth-child(even) .vid-embed,
+  .topic-row.has-img:nth-child(even) .topic-img {
+    order: 0;
+  }
+  .ig-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
 }
 

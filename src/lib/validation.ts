@@ -45,8 +45,10 @@ export const contentSaveSchema = z.object({
     .array(
       z.object({
         key: z.string().min(1).max(120),
-        id: z.string().max(8000),
-        en: z.string().max(8000),
+        // Most fields are short, but dynamic sections (about.blocks, home.videos)
+        // store a JSON document here, so the cap is generous.
+        id: z.string().max(60000),
+        en: z.string().max(60000),
       }),
     )
     .max(500),

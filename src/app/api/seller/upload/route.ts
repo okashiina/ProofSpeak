@@ -16,11 +16,12 @@ export async function POST(req: NextRequest) {
   }
   const file = form.get("file");
   const prefix = (form.get("prefix") as string) || "uploads";
+  const kind = (form.get("kind") as string) === "pdf" ? "pdf" : "image";
   if (!(file instanceof File)) {
     return NextResponse.json({ ok: false, error: "File tidak ditemukan." }, { status: 400 });
   }
 
-  const result = await uploadImage(file, prefix);
+  const result = await uploadImage(file, prefix, kind);
   if (!result.ok) {
     return NextResponse.json({ ok: false, error: result.error }, { status: 400 });
   }

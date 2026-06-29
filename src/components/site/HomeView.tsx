@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { useLang } from "@/components/LanguageProvider";
 import type { Product } from "@/lib/db/schema";
-
-const MARQUEE = {
-  id: ["Suaramu Nyata", "Kamu Dipercaya", "Tidak Salahmu", "Kamu Tidak Sendiri", "Bersuara Itu Berani"],
-  en: ["Your Voice Is Real", "You Are Believed", "Not Your Fault", "You Are Not Alone", "Speaking Is Brave"],
-};
+import { getVideos, pick, toEmbedUrl } from "@/lib/dynamic";
 
 export default function HomeView({
   products,
@@ -16,9 +12,9 @@ export default function HomeView({
   products: Product[];
   stats: { stories: number; orders: number };
 }) {
-  const { c, t, lang } = useLang();
+  const { c, t, lang, content } = useLang();
   const heroImg = c("img.hero");
-  const phrases = MARQUEE[lang];
+  const videos = getVideos(content);
 
   return (
     <div className="fade-in">
@@ -48,17 +44,6 @@ export default function HomeView({
           </div>
         </div>
       </section>
-
-      {/* MARQUEE */}
-      <div className="marquee-w" aria-hidden="true">
-        <div className="marquee-t">
-          {[...phrases, ...phrases].map((p, i) => (
-            <span className="mq-item" key={i}>
-              {p} <span>✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* STATS */}
       <div className="stat-strip">
@@ -141,6 +126,49 @@ export default function HomeView({
           </div>
         </div>
       </section>
+
+      {/* CAMPAIGN VIDEO GALLERY */}
+      {videos.length > 0 && (
+        <section className="secpad" style={{ borderTop: "1px solid var(--border)" }}>
+          <div className="container">
+            <div className="sec-idx">03 / {c("home.vid.label")}</div>
+            <h2 className="disp-md" style={{ marginBottom: "3rem", maxWidth: 620 }}>
+              {c("home.vid.title")}
+            </h2>
+            <div className="vid-gallery">
+              {videos.map((v, i) => {
+                const embed = toEmbedUrl(v.url);
+                const title = pick(v.titleId, v.titleEn, lang);
+                const desc = pick(v.descId, v.descEn, lang);
+                return (
+                  <article className="vid-item" key={i}>
+                    <div className="vid-embed">
+                      {embed ? (
+                        <iframe
+                          src={embed}
+                          title={title || `Video ${i + 1}`}
+                          loading="lazy"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <div className="vid-empty">Video belum tersedia</div>
+                      )}
+                    </div>
+                    <div className="vid-info">
+                      <div className="lbl" style={{ marginBottom: ".75rem" }}>
+                        {lang === "id" ? "Tentang Video Ini" : "About This Video"}
+                      </div>
+                      {title && <h3 className="vid-title">{title}</h3>}
+                      {desc && <p className="vid-desc">{desc}</p>}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

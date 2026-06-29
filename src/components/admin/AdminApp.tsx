@@ -7,6 +7,7 @@ import type { Story, Order, Contact, Product } from "@/lib/db/schema";
 import type { ContentMap } from "@/lib/types";
 import DashboardPanel from "./panels/DashboardPanel";
 import ContentPanel from "./panels/ContentPanel";
+import SectionsPanel from "./panels/SectionsPanel";
 import ImagesPanel from "./panels/ImagesPanel";
 import ProductsPanel from "./panels/ProductsPanel";
 import StoriesPanel from "./panels/StoriesPanel";
@@ -14,7 +15,7 @@ import OrdersPanel from "./panels/OrdersPanel";
 import ContactsPanel from "./panels/ContactsPanel";
 import SettingsPanel from "./panels/SettingsPanel";
 
-type Tab = "dash" | "content" | "images" | "products" | "stories" | "orders" | "contacts" | "settings";
+type Tab = "dash" | "content" | "sections" | "images" | "products" | "stories" | "orders" | "contacts" | "settings";
 
 export default function AdminApp({
   email,
@@ -53,6 +54,7 @@ export default function AdminApp({
       title: "Konten",
       items: [
         { id: "content", label: "Editor Teks" },
+        { id: "sections", label: "Bagian Halaman" },
         { id: "images", label: "Gambar" },
         { id: "products", label: "Produk Kalung" },
       ],
@@ -115,6 +117,7 @@ export default function AdminApp({
             />
           )}
           {tab === "content" && <ContentPanel content={content} setContent={setContent} />}
+          {tab === "sections" && <SectionsPanel content={content} setContent={setContent} />}
           {tab === "images" && <ImagesPanel content={content} setContent={setContent} />}
           {tab === "products" && <ProductsPanel products={products} setProducts={setProducts} />}
           {tab === "stories" && <StoriesPanel stories={stories} setStories={setStories} />}

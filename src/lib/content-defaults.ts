@@ -1,4 +1,5 @@
 import type { ContentMap, Lang } from "./types";
+import { DEFAULT_ABOUT_BLOCKS, DEFAULT_BYSTANDER, DEFAULT_VIDEOS } from "./dynamic";
 
 export type FieldType = "text" | "textarea" | "image";
 
@@ -33,7 +34,8 @@ export const CONTENT_FIELDS: ContentField[] = [
     en: "If you are in danger — call 119 or SAPA 1800-111-120" },
   { key: "ci.email", section: "Umum & Kontak", label: "Email", type: "text", bilingual: false, id: "halo@proofspeak.id", en: "" },
   { key: "ci.wa", section: "Umum & Kontak", label: "WhatsApp", type: "text", bilingual: false, id: "+62 812-0000-0000", en: "" },
-  { key: "ci.ig", section: "Umum & Kontak", label: "Instagram", type: "text", bilingual: false, id: "@proofspeak.id", en: "" },
+  { key: "ci.ig", section: "Umum & Kontak", label: "Instagram (username)", type: "text", bilingual: false, id: "@proofspeak.id", en: "" },
+  { key: "ci.ig.url", section: "Umum & Kontak", label: "Instagram (link lengkap)", type: "text", bilingual: false, id: "https://instagram.com/proofspeak.id", en: "" },
   { key: "ci.domain", section: "Umum & Kontak", label: "Domain", type: "text", bilingual: false, id: "proofspeak.id", en: "" },
   { key: "ci.hotline", section: "Umum & Kontak", label: "Hotline / SAPA", type: "text", bilingual: false, id: "1800-111-120", en: "" },
   { key: "ci.emergency", section: "Umum & Kontak", label: "Nomor Darurat", type: "text", bilingual: false, id: "119", en: "" },
@@ -69,6 +71,8 @@ export const CONTENT_FIELDS: ContentField[] = [
   { key: "prod.sub", section: "Beranda", label: "Bagian Kalung — Sub", type: "textarea", bilingual: true,
     id: "10% dari setiap pembelian mendukung layanan pendampingan penyintas.",
     en: "10% of every purchase supports survivor accompaniment services." },
+  { key: "home.vid.label", section: "Beranda", label: "Galeri Video — Label kecil", type: "text", bilingual: true, id: "Galeri Kampanye", en: "Campaign Gallery" },
+  { key: "home.vid.title", section: "Beranda", label: "Galeri Video — Judul", type: "text", bilingual: true, id: "Tonton gerakannya.", en: "Watch the movement." },
 
   // ---- Tentang / About ----
   { key: "about.label", section: "Tentang", label: "Label", type: "text", bilingual: true, id: "Tentang Kami", en: "About Us" },
@@ -97,6 +101,8 @@ export const CONTENT_FIELDS: ContentField[] = [
   { key: "about.v4d", section: "Tentang", label: "Nilai 4 — isi", type: "textarea", bilingual: true,
     id: "Kampanye ini terhubung langsung ke pendampingan dan produk yang mendanai gerakan.",
     en: "This campaign connects directly to support services and products that fund the movement." },
+  { key: "about.topics.label", section: "Tentang", label: "Topik Tambahan — Label kecil", type: "text", bilingual: true, id: "Konteks Perancangan", en: "Design Context" },
+  { key: "about.topics.title", section: "Tentang", label: "Topik Tambahan — Judul", type: "text", bilingual: true, id: "Kenapa ProofSpeak ada.", en: "Why ProofSpeak exists." },
 
   // ---- Kampanye / Campaign ----
   { key: "camp.label", section: "Kampanye", label: "Label", type: "text", bilingual: true, id: "Apa yang Kami Perjuangkan", en: "What We Fight For" },
@@ -148,6 +154,13 @@ export const CONTENT_FIELDS: ContentField[] = [
 export const DEFAULT_CONTENT: ContentMap = Object.fromEntries(
   CONTENT_FIELDS.map((f) => [f.key, { id: f.id, en: f.bilingual ? f.en : f.id }]),
 );
+
+// Dynamic/repeatable content lives as JSON in the same key/value store (no schema
+// change). Defaults are seeded in `src/lib/dynamic.ts` and JSON-encoded here so the
+// public site shows meaningful content before the editor touches anything.
+DEFAULT_CONTENT["about.blocks"] = { id: JSON.stringify(DEFAULT_ABOUT_BLOCKS), en: "" };
+DEFAULT_CONTENT["about.bystander"] = { id: JSON.stringify(DEFAULT_BYSTANDER), en: "" };
+DEFAULT_CONTENT["home.videos"] = { id: JSON.stringify(DEFAULT_VIDEOS), en: "" };
 
 /** Read a value from a content map with id->en->key fallback. */
 export function cval(map: ContentMap, key: string, lang: Lang = "id"): string {

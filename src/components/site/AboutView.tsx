@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useLang } from "@/components/LanguageProvider";
+import { getAboutBlocks, getBystander, pick } from "@/lib/dynamic";
 
 export default function AboutView() {
-  const { c, t } = useLang();
+  const { c, t, lang, content } = useLang();
   const values = [
     { t: c("about.v1t"), d: c("about.v1d") },
     { t: c("about.v2t"), d: c("about.v2d") },
@@ -16,6 +17,10 @@ export default function AboutView() {
     { n: "02", color: "var(--pink)", t: c("camp.c2.title"), b: c("camp.c2.body") },
     { n: "03", color: "var(--teal)", t: c("camp.c3.title"), b: c("camp.c3.body") },
   ];
+  const blocks = getAboutBlocks(content);
+  const bystander = getBystander(content);
+  const igUrl = c("ci.ig.url");
+  const igHandle = c("ci.ig");
 
   return (
     <div className="fade-in">
@@ -45,6 +50,69 @@ export default function AboutView() {
           </div>
         </div>
       </section>
+
+      {/* EDITOR TOPIC COLUMNS — deeper context, each with optional photo */}
+      {blocks.length > 0 && (
+        <section style={{ padding: "1rem 0 5rem" }}>
+          <div className="container">
+            <div className="lbl" style={{ marginBottom: "1.25rem" }}>
+              {c("about.topics.label")}
+            </div>
+            <h2 className="disp-md" style={{ marginBottom: "3rem", maxWidth: 620 }}>
+              {c("about.topics.title")}
+            </h2>
+            <div className="topic-list">
+              {blocks.map((b, i) => {
+                const title = pick(b.titleId, b.titleEn, lang);
+                const body = pick(b.bodyId, b.bodyEn, lang);
+                return (
+                  <article className={`topic-row ${b.image ? "has-img" : ""}`} key={i}>
+                    {b.image && (
+                      <div className="topic-img">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={b.image} alt={title} loading="lazy" />
+                      </div>
+                    )}
+                    <div className="topic-text">
+                      <h3>{title}</h3>
+                      <p>{body}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* BYSTANDER GUIDE */}
+      {(bystander.titleId || bystander.titleEn || bystander.bodyId || bystander.bodyEn) && (
+        <section className="bystander">
+          <div className="container">
+            <div className="bys-card">
+              <div className="bys-text">
+                <div className="lbl" style={{ marginBottom: "1rem", color: "var(--black)" }}>
+                  ProofSpeak
+                </div>
+                <h2>{pick(bystander.titleId, bystander.titleEn, lang)}</h2>
+                <p>{pick(bystander.bodyId, bystander.bodyEn, lang)}</p>
+                {bystander.link && (
+                  <a
+                    className="btn btn-primary"
+                    href={bystander.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ marginTop: "1.75rem" }}
+                  >
+                    {pick(bystander.ctaId, bystander.ctaEn, lang) ||
+                      (lang === "id" ? "Buka Booklet" : "Open the Booklet")}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="divider" />
 
@@ -92,6 +160,25 @@ export default function AboutView() {
           </div>
         </div>
       </section>
+
+      {/* INSTAGRAM REDIRECT — very bottom of About */}
+      {igUrl && (
+        <section className="ig-strip">
+          <div className="container">
+            <div className="ig-inner">
+              <div>
+                <div className="lbl" style={{ marginBottom: ".6rem" }}>
+                  {lang === "id" ? "Ikuti gerakannya" : "Follow the movement"}
+                </div>
+                <h2 className="disp-md">{igHandle}</h2>
+              </div>
+              <a className="btn btn-outline" href={igUrl} target="_blank" rel="noopener noreferrer">
+                {lang === "id" ? "Buka Instagram" : "Open Instagram"}
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
