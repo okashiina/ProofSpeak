@@ -1,9 +1,51 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { useLang } from "@/components/LanguageProvider";
 import type { Product } from "@/lib/db/schema";
-import { getVideos, pick, toEmbedUrl } from "@/lib/dynamic";
+import { getVideos, isFileVideo, pick, toEmbedUrl } from "@/lib/dynamic";
+
+/**
+ * Uploaded campaign video: loops muted, but only plays (and downloads) while
+ * on screen. Playback starts from JS because React doesn't serialize `muted`
+ * into server-rendered HTML, so a plain autoPlay attribute gets blocked by
+ * browser autoplay policy — and autoPlay would also make every gallery video
+ * download in full on page load.
+ */
+function LoopVideo({ src, label }: { src: string; label: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) el.play().catch(() => {});
+          else el.pause();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      loop
+      muted
+      playsInline
+      controls
+      preload="metadata"
+      aria-label={label}
+    />
+  );
+}
 
 export default function HomeView({
   products,
@@ -137,13 +179,16 @@ export default function HomeView({
             </h2>
             <div className="vid-gallery">
               {videos.map((v, i) => {
-                const embed = toEmbedUrl(v.url);
+                const file = isFileVideo(v.url);
+                const embed = file ? "" : toEmbedUrl(v.url);
                 const title = pick(v.titleId, v.titleEn, lang);
                 const desc = pick(v.descId, v.descEn, lang);
                 return (
                   <article className="vid-item" key={i}>
                     <div className="vid-embed">
-                      {embed ? (
+                      {file ? (
+                        <LoopVideo src={v.url} label={title || `Video ${i + 1}`} />
+                      ) : embed ? (
                         <iframe
                           src={embed}
                           title={title || `Video ${i + 1}`}

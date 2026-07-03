@@ -23,7 +23,7 @@ export interface AboutBlock {
 
 /** A campaign video + its description, shown gallery-style on Home. */
 export interface VideoItem {
-  url: string; // YouTube / Vimeo / embed link
+  url: string; // uploaded video file (blob URL) or YouTube / Vimeo / Drive link
   titleId: string;
   titleEn: string;
   descId: string;
@@ -112,9 +112,28 @@ export function getVideos(map: ContentMap): VideoItem[] {
   return Array.isArray(v) ? v : DEFAULT_VIDEOS;
 }
 
+/** Upload constraints for campaign videos — single source of truth for the
+ * admin uploader (client) and the upload-token route (server). */
+export const VIDEO_MAX_BYTES = 100 * 1024 * 1024; // 100MB per video
+export const VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+export const VIDEO_TYPE_EXT: Record<string, string> = {
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
+};
+
 /**
- * Turn a YouTube / Vimeo watch or share link into an embeddable URL. Returns the
- * input unchanged if it already looks like an embed, or "" when empty.
+ * True when the URL points at an uploaded video file (played with a native
+ * <video> tag, autoplay + loop) rather than an embeddable page.
+ */
+export function isFileVideo(url: string): boolean {
+  return /\.(mp4|webm|mov|m4v|ogv)([?#]|$)/i.test((url || "").trim());
+}
+
+/**
+ * Turn a YouTube / Vimeo / Google Drive watch or share link into an embeddable
+ * URL. Returns the input unchanged if it already looks like an embed, or ""
+ * when empty.
  */
 export function toEmbedUrl(url: string): string {
   const u = (url || "").trim();
@@ -128,6 +147,13 @@ export function toEmbedUrl(url: string): string {
   // Vimeo: vimeo.com/123456
   const vm = u.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
   if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+
+  // Google Drive: file/d/<id>/view (or ?id=<id>) -> the /preview embed player.
+  // The file itself must still be shared as "anyone with the link".
+  const gd =
+    u.match(/drive\.google\.com\/file\/d\/([\w-]+)/i) ||
+    u.match(/drive\.google\.com\/(?:open|uc)\?(?:[^#]*&)?id=([\w-]+)/i);
+  if (gd) return `https://drive.google.com/file/d/${gd[1]}/preview`;
 
   return u;
 }
