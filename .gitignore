@@ -32,3 +32,9 @@ next-env.d.ts
 
 # drizzle
 /drizzle/meta
+
+# private instruction files
+CLAUDE.md
+CLAUDE.local.md
+**/CLAUDE.md
+**/CLAUDE.local.md

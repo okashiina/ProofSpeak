@@ -360,6 +360,28 @@
   padding: 0.5rem;
 }
 
+/* video uploader */
+.vid-upload-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-top: 0.85rem;
+  overflow: hidden;
+}
+.vid-upload-fill {
+  height: 100%;
+  background: var(--teal, #386069);
+  transition: width 0.2s;
+}
+.vid-upload-prev {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 8px;
+  margin-top: 0.85rem;
+}
+
 /* product admin card */
 .pad-card {
   background: var(--surface);

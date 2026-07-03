@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { apiSend } from "@/lib/client";
 import ImageUploader from "../ImageUploader";
+import VideoUploader from "../VideoUploader";
 import {
   getAboutBlocks,
   getBystander,
   getVideos,
+  isFileVideo,
   type AboutBlock,
   type BystanderGuide,
   type VideoItem,
@@ -78,6 +80,20 @@ export default function SectionsPanel({
     if (!res.ok) {
       setErr(res.error === "__generic__" ? "Gagal menyimpan." : res.error);
       return;
+    }
+    // The new list is saved — now clean up uploaded videos it no longer
+    // references, so replaced/removed 100MB files don't pile up in storage.
+    // Only after a successful save: deleting earlier would break the live
+    // site if the admin abandoned the edit.
+    const kept = new Set(videos.map((v) => v.url));
+    for (const old of getVideos(content)) {
+      if (old.url && !kept.has(old.url) && isFileVideo(old.url) && old.url.includes(".vercel-storage.com")) {
+        fetch("/api/seller/upload/video", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: old.url }),
+        }).catch(() => {});
+      }
     }
     setContent((prev) => {
       const next = { ...prev };
@@ -200,8 +216,13 @@ export default function SectionsPanel({
               </button>
             </div>
           </div>
+          <VideoUploader
+            label="Unggah Video (otomatis diputar berulang di Beranda)"
+            value={v.url}
+            onChange={(val) => patchVideo(i, { url: val })}
+          />
           <Field
-            label="Link Video (YouTube / Vimeo)"
+            label="…atau tempel link video (YouTube / Vimeo / Google Drive)"
             value={v.url}
             onChange={(val) => patchVideo(i, { url: val })}
           />

@@ -78,6 +78,17 @@ ke semua pengunjung.
 Klik kotak → pilih foto dari perangkat (maks 5MB). Foto **langsung tersimpan permanen**
 (tidak hilang saat refresh) dan langsung tampil ke semua orang.
 
+**Bagian Halaman** — tambah topik di halaman Tentang, atur Panduan Bystander, dan isi
+**galeri video Beranda**. Untuk tiap video ada dua cara:
+- **Unggah file video** (MP4/WebM/MOV, maks 100MB) langsung dari perangkat — video
+  tampil di Beranda dan **otomatis diputar berulang** (tanpa suara; pengunjung bisa
+  menyalakan suara lewat tombol di video). Tidak perlu akun YouTube.
+- **Tempel link** YouTube / Vimeo / Google Drive. Khusus Drive: file harus diatur
+  **“Siapa saja yang memiliki link” (Anyone with the link)** di menu Bagikan, kalau tidak
+  pengunjung melihat error 403. Link Instagram **tidak bisa** dipakai.
+
+Jangan lupa klik **Simpan Semua** setelah mengubah.
+
 **Produk Kalung** — kelola kalung:
 - **+ Tambah Produk**: isi nama, harga, deskripsi (2 bahasa), warna, foto, status.
 - **Edit / Nonaktifkan / Hapus** tiap produk. Produk “Tidak Aktif” tidak tampil ke pengunjung.
@@ -150,3 +161,9 @@ Kalau ketujuh poin di atas ✅, situs siap dipakai.
   tidak melihat teks Indonesia.
 - **Lupa password admin?** Hubungi yang menyiapkan situs (deployment) untuk mereset.
 - **Foto**: pakai gambar < 5MB. Logo paling bagus PNG latar transparan.
+- **Video**: makin kecil filenya makin cepat dimuat pengunjung. Reels 15–60 detik dari HP
+  biasanya sudah pas; kalau lebih dari 100MB, kecilkan dulu (mis. ekspor ulang dari
+  aplikasi edit video di HP dengan kualitas lebih rendah).
+- **Video dari iPhone**: format bawaan iPhone (.mov/HEVC) kadang tidak bisa diputar di
+  HP Android. Paling aman pakai **MP4**. Di iPhone: **Pengaturan → Kamera → Format →
+  “Paling Kompatibel”**, atau ekspor MP4 dari aplikasi edit (CapCut dll.) sebelum unggah.
